@@ -80,6 +80,8 @@ public class HttpServer {
 		            }
 		        }
 		        
+		        System.out.println("esto          "+request.get("requestLine"));
+		        
 		        Request req = new Request(request.get("requestLine"));
 
 		        System.out.println("RequestLine: " + req);
