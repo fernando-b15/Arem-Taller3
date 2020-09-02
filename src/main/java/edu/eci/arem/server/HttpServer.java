@@ -37,10 +37,10 @@ public class HttpServer {
 	    }
 
 		 public void start() throws IOException {
-			   int Puerto=this.getPort();	
+			   int puerto=this.getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
-			      serverSocket = new ServerSocket(Puerto);
+			      serverSocket = new ServerSocket(puerto);
 			   } catch (IOException e) {
 			      System.err.println("Could not listen on port: 36000.");
 			      System.exit(1);
@@ -79,12 +79,13 @@ public class HttpServer {
 		                break;
 		            }
 		        }
-		        if(!(request.get("requestLine").contains("favicon.ico"))) {
-		        	Request req = new Request(request.get("requestLine"));
-		        	System.out.println("RequestLine: " + req);
-			        createResponse(req, new PrintWriter(
-			                clientSocket.getOutputStream(), true),clientSocket);
-		        }	
+		        
+		        Request req = new Request(request.get("requestLine"));
+
+		        System.out.println("RequestLine: " + req);
+
+		        createResponse(req, new PrintWriter(
+		                clientSocket.getOutputStream(), true),clientSocket);
 		        in.close();
 		    }
 
