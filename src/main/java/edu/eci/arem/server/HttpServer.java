@@ -37,7 +37,7 @@ public class HttpServer {
 	    }
 
 		 public void start() throws IOException {
-			   getPort();	
+			   int Puerto=this.getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
 			      serverSocket = new ServerSocket(36000);
