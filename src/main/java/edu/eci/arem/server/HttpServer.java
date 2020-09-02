@@ -65,7 +65,7 @@ public class HttpServer {
 		        Map<String, String> request = new HashMap<>();
 		        boolean requestLineReady = false;
 		        while ((inputLine = in.readLine()) != null) {
-		        	 System.out.println("Recib�: " + inputLine);
+		        	 System.out.println("Recibo: " + inputLine);
 		            if (!requestLineReady) {
 		                request.put("requestLine", inputLine);
 		                requestLineReady = true;
@@ -79,12 +79,12 @@ public class HttpServer {
 		                break;
 		            }
 		        }
-		        Request req = new Request(request.get("requestLine"));
-
-		        System.out.println("RequestLine: " + req);
-
-		        createResponse(req, new PrintWriter(
-		                clientSocket.getOutputStream(), true),clientSocket);
+		        if(!(request.get("requestLine").contains("favicon.ico"))) {
+		        	Request req = new Request(request.get("requestLine"));
+		        	System.out.println("RequestLine: " + req);
+			        createResponse(req, new PrintWriter(
+			                clientSocket.getOutputStream(), true),clientSocket);
+		        }	
 		        in.close();
 		    }
 
