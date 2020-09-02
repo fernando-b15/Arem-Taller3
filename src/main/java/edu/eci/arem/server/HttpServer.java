@@ -79,15 +79,16 @@ public class HttpServer {
 		                break;
 		            }
 		        }
-		        
-		        System.out.println("esto          "+request.get("requestLine"));
-		        
-		        Request req = new Request(request.get("requestLine"));
-
-		        System.out.println("RequestLine: " + req);
-
-		        createResponse(req, new PrintWriter(
-		                clientSocket.getOutputStream(), true),clientSocket);
+		        if(request.get("requestLine") != null) {
+			        System.out.println("esto          "+request.get("requestLine"));
+			        
+			        Request req = new Request(request.get("requestLine"));
+	
+			        System.out.println("RequestLine: " + req);
+	
+			        createResponse(req, new PrintWriter(
+			                clientSocket.getOutputStream(), true),clientSocket);
+		        }
 		        in.close();
 		    }
 
