@@ -29,8 +29,15 @@ public class HttpServer {
 		public HttpServer(){
 			
 		}
+		 static int getPort() {
+	    	 if (System.getenv("PORT") != null) {
+	    		 return Integer.parseInt(System.getenv("PORT"));
+	    	 }
+	    	 return 36000; //returns default port if heroku-port isn't set
+	    }
 
 		 public void start() throws IOException {
+			   getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
 			      serverSocket = new ServerSocket(36000);
