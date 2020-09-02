@@ -29,7 +29,7 @@ public class HttpServer {
 		public HttpServer(){
 			
 		}
-		 static int getPort() {
+		 public int getPort() {
 	    	 if (System.getenv("PORT") != null) {
 	    		 return Integer.parseInt(System.getenv("PORT"));
 	    	 }
@@ -40,7 +40,7 @@ public class HttpServer {
 			   int Puerto=this.getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
-			      serverSocket = new ServerSocket(36000);
+			      serverSocket = new ServerSocket(Puerto);
 			   } catch (IOException e) {
 			      System.err.println("Could not listen on port: 36000.");
 			      System.exit(1);
