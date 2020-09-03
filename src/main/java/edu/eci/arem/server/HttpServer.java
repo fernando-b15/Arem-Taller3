@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +28,7 @@ import javax.imageio.ImageIO;
 
 
 public class HttpServer {
+		private Map<String,Function> rutas = new HashMap<String,Function>();
 		public HttpServer(){
 			
 		}
@@ -95,7 +98,6 @@ public class HttpServer {
 		    private String[] createEntry(String rawEntry) {
 		        return rawEntry.split(":");
 		    }
-		    
 		    private String getFormat(Request req) {
 		    	URI theuri = req.getTheuri();
 		        String formato;
@@ -114,6 +116,12 @@ public class HttpServer {
 		        URI theuri = req.getTheuri();
 		        if((theuri.getPath()).equals("/")) {
 		        	getStaticResource("html","/index.html",out);
+		        }
+		        else if(theuri.getPath().startsWith("/Apps") && !(theuri.getPath().contains(".js")) ) {
+		        	String[] compoPath = (theuri.getPath()).split("/");
+		        	System.out.println("llave "+compoPath[2]);
+		        	out.print(rutas.get("/"+compoPath[2]).apply(req));
+		        	
 		        }
 		        else if (theuri.getPath().contains("PNG") || theuri.getPath().contains("JPG")  || theuri.getPath().contains("png") || theuri.getPath().contains("jpg") ) {
 		        	String formato = getFormat(req);
@@ -177,13 +185,16 @@ public class HttpServer {
 				}
 		    }
 		    private void getStaticResource(String type,String path, PrintWriter out) {
-		    	System.out.println("Type RequestLine: " + type);
+		    	System.out.println("Type RequestLine: " + type+path);
+		    	if(path.contains("/Apps")) {
+		    		path=path.replace("/Apps","");
+		    	}
 		        Path file = Paths.get("src/main/resources/public_html" + path);
 		        try (InputStream in = Files.newInputStream(file);
 		                BufferedReader reader
 		                = new BufferedReader(new InputStreamReader(in))) {
 		            String header = "HTTP/1.1 200 OK\r\n"
-		                + "Content-Type: text/"+type+"\r\n"
+		                + "Content-Type: text/"+"html"+"\r\n"
 		                + "\r\n";
 		            out.println(header);
 		            String line = null; 
@@ -195,6 +206,11 @@ public class HttpServer {
 		        	notFound(out);
 		        }
 		    }
+			public void get(String endPoint,Function<Request,String>  res) {
+				System.out.println("ruta "+endPoint);
+				System.out.println("val "+res);
+				rutas.put(endPoint , res);
+			}
 		
 		 
 
