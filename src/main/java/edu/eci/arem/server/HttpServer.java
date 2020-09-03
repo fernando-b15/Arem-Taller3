@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,8 +38,9 @@ import edu.eci.arem.Persistence.MongoConnection;
 
 public class HttpServer {
 		private Map<String,Function> rutas = new HashMap<String,Function>();
-		public HttpServer(){
-			
+		private MongoConnection mongo;
+		public HttpServer() throws UnknownHostException{
+			mongo = new MongoConnection();
 		}
 		 public int getPort() {
 	    	 if (System.getenv("PORT") != null) {
@@ -46,9 +48,11 @@ public class HttpServer {
 	    	 }
 	    	 return 36000; //returns default port if heroku-port isn't set
 	    }
-
+		 public  MongoConnection getMongoConnecion() {
+			 return this.mongo;
+		 }
 		 public void start() throws IOException {
-			   MongoConnection mongo = new MongoConnection();
+		
 			   int puerto=this.getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
@@ -56,10 +60,6 @@ public class HttpServer {
 			   } catch (IOException e) {
 			      System.err.println("Could not listen on port: 36000.");
 			      System.exit(1);
-			   }
-			   ArrayList<BasicDBObject> list= mongo.consult();
-			   for(BasicDBObject d:list) {
-				   System.out.println(d.get("nombre"));
 			   }
 			   while(true){
 				   Socket clientSocket = null;
@@ -131,10 +131,13 @@ public class HttpServer {
 		        	getStaticResource("html","/index.html",out);
 		        }
 		        else if(theuri.getPath().startsWith("/Apps") && !(theuri.getPath().contains(".js")) ) {
-		        	String[] compoPath = (theuri.getPath()).split("/");
-		        	System.out.println("llave "+compoPath[2]);
-		        	out.print(rutas.get("/"+compoPath[2]).apply(req));
-		        	
+		        	try{
+		        		String[] compoPath = (theuri.getPath()).split("/");
+		        		System.out.println("llave "+compoPath[2]);
+		        		out.print(rutas.get("/"+compoPath[2]).apply(req));
+		        	}catch (Exception e) {
+						notFound(out);
+					}
 		        }
 		        else if (theuri.getPath().contains("PNG") || theuri.getPath().contains("JPG")  || theuri.getPath().contains("png") || theuri.getPath().contains("jpg") ) {
 		        	String formato = getFormat(req);

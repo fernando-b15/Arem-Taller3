@@ -77,6 +77,10 @@ public class Request {
     public void setTheuri(URI theuri) {
         this.theuri = theuri;
     }
+    
+    public void setRequestUri(String newRequestUri) {
+        this.requestURI = newRequestUri;
+    }
 
     private Map<String, String> parseQuery(String query) {
         if( query == null) return null;
