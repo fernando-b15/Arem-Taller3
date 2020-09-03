@@ -115,8 +115,9 @@ public class HttpServer {
 		        if((theuri.getPath()).equals("/")) {
 		        	getStaticResource("html","/index.html",out);
 		        }
-		        else if (theuri.getPath().contains("PNG") || theuri.getPath().contains("JPG") || theuri.getPath().contains("JPEG") || theuri.getPath().contains("JFIF") ) {
-		        	getStaticImagen(theuri,clientSocket,out);
+		        else if (theuri.getPath().contains("PNG") || theuri.getPath().contains("JPG")  || theuri.getPath().contains("png") || theuri.getPath().contains("jpg") ) {
+		        	String formato = getFormat(req);
+		        	getStaticImagen(formato,theuri,clientSocket,out);
 		               
 		        } else {
 		        	String formato = getFormat(req);
@@ -160,15 +161,16 @@ public class HttpServer {
 				out.print(Error);
 		    	
 		    }
-		    private void getStaticImagen(URI theuri,Socket clientSocket,PrintWriter out) {
+		    private void getStaticImagen(String type,URI theuri,Socket clientSocket,PrintWriter out) {
 		    	File dirImg = new File("src/main/resources/public_html"+theuri.getPath());
+		    	System.out.println("Type iMAGEN xdxxxxxxxxx: " + type);
         		BufferedImage image;
 				try {
 					image = ImageIO.read(dirImg);
 					ByteArrayOutputStream ArrBytes = new ByteArrayOutputStream();
 	                DataOutputStream writeimg = new DataOutputStream(clientSocket.getOutputStream());
-	                ImageIO.write(image, "PNG", ArrBytes);
-	                writeimg.writeBytes("HTTP/1.1 200 OK \r\n" + "Content-Type: image/png \r\n" + "\r\n");
+	                ImageIO.write(image, type, ArrBytes);
+	                writeimg.writeBytes("HTTP/1.1 200 OK \r\n" + "Content-Type: image/"+type+" \r\n" + "\r\n");
 	                writeimg.write(ArrBytes.toByteArray());
 				} catch (IOException e) {
 					notFound(out);
