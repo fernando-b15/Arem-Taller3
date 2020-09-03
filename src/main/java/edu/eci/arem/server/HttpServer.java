@@ -17,13 +17,21 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+
+import edu.eci.arem.Persistence.MongoConnection;
 
 
 
@@ -40,6 +48,7 @@ public class HttpServer {
 	    }
 
 		 public void start() throws IOException {
+			   MongoConnection mongo = new MongoConnection();
 			   int puerto=this.getPort();	
 			   ServerSocket serverSocket = null;
 			   try { 
@@ -47,6 +56,10 @@ public class HttpServer {
 			   } catch (IOException e) {
 			      System.err.println("Could not listen on port: 36000.");
 			      System.exit(1);
+			   }
+			   ArrayList<BasicDBObject> list= mongo.consult();
+			   for(BasicDBObject d:list) {
+				   System.out.println(d.get("nombre"));
 			   }
 			   while(true){
 				   Socket clientSocket = null;
