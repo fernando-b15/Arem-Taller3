@@ -34,23 +34,46 @@ import com.mongodb.BasicDBObject;
 
 import edu.eci.arem.Persistence.MongoConnection;
 
-
+/**
+ * Esta clase representa el servidor http de la app definido con sockets
+ *@author Fernando Barrera
+ */
 
 public class HttpServer {
 		private Map<String,Function> rutas = new HashMap<String,Function>();
 		private MongoConnection mongo;
+		/**
+		 * Este metodo es el metodo constructor de la palicacion que simplemente inicia la coneccion a la base de datos
+		 * 
+		 * @throws UnknownHostException
+		 */
 		public HttpServer() throws UnknownHostException{
 			mongo = new MongoConnection();
 		}
+		/**
+		 * Retorna el numero del puerto sobre el cual se esta ejecutando la aplicacion
+		 * 
+		 * @return int
+		 */
 		 public int getPort() {
 	    	 if (System.getenv("PORT") != null) {
 	    		 return Integer.parseInt(System.getenv("PORT"));
 	    	 }
 	    	 return 36000; //returns default port if heroku-port isn't set
 	    }
+		 /**
+		  * Retorna la coneccion a la base de datos Mongo DB que esta conectada al servidor
+		  * 
+		  * @return MongoConnection
+		  */
 		 public  MongoConnection getMongoConnecion() {
 			 return this.mongo;
 		 }
+		 /**
+		  * Este metodo inicia el servidor
+		  * 
+		  * @throws IOException
+		  */
 		 public void start() throws IOException {
 		
 			   int puerto=this.getPort();	
@@ -74,6 +97,12 @@ public class HttpServer {
 				    clientSocket.close(); 
 				  }
 	}
+		 /**
+		  * Este metodo recibe un cliente socker para analizar las peticiones al servidor socket
+		  * 
+		  * @param clientSocket
+		  * @throws IOException
+		  */
 		 private void processRequest(Socket clientSocket) throws IOException {
 		        BufferedReader in = new BufferedReader(
 		                new InputStreamReader(clientSocket.getInputStream()));
@@ -107,10 +136,21 @@ public class HttpServer {
 		        }
 		        in.close();
 		    }
-
+		 	/**
+		 	 * Este metodo simplemente se encarga de partir los datos de una peticion que viene en un solo string para facilitar su uso
+		 	 * 
+		 	 * @param rawEntry
+		 	 * @return String[]
+		 	 */
 		    private String[] createEntry(String rawEntry) {
 		        return rawEntry.split(":");
 		    }
+		    /**
+		     * se encarga de retorna el formato del archivo solicitando en la peticion
+		     * 
+		     * @param req
+		     * @return String
+		     */
 		    private String getFormat(Request req) {
 		    	URI theuri = req.getTheuri();
 		        String formato;
@@ -123,6 +163,14 @@ public class HttpServer {
 		        }
 	        	return formato;
 		    }
+		    /**
+		     * este metodo recibe una request ,un client socket y un printer para analizar la request y dependiendo si requiere un archivo o imagen o recurso dinameico
+		     * con el printer se encarga de enviar la respuesta al servidor
+		     * 
+		     * @param req
+		     * @param out
+		     * @param clientSocket
+		     */
 
 		    private void createResponse(Request req, PrintWriter out,Socket clientSocket) {
 		        String outputLine = testResponse();
@@ -149,7 +197,11 @@ public class HttpServer {
 		        }
 		        out.close();
 		    }
-
+		    /**
+		     * Metodo de plantilla de repuestas
+		     * @return String
+		     */
+		    
 		    private String testResponse() {
 		        String outputLine = "HTTP/1.1 200 OK\r\n"
 		                + "Content-Type: text/html\r\n"
@@ -166,6 +218,11 @@ public class HttpServer {
 		                + "</html>\n";
 		        return outputLine;
 		    }
+		    /**
+		     * Este metodo printea un error 404 en servidor en caso de que el recurso solicitado no sea encontardo 
+		     * 
+		     * @param out
+		     */
 		    private void notFound(PrintWriter out) {
 		    	String Error="HTTP/1.1 404 Not Found \r\nContent-Type: text/html \r\n\r\n <!DOCTYPE html> "
 						+"		<link href='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet' id='bootstrap-css'>"
@@ -185,6 +242,14 @@ public class HttpServer {
 				out.print(Error);
 		    	
 		    }
+		    /**
+		     * Este metodo se encarga de recibir la  peticion,uri,socket de cliente , printer y el formato de la imagen para retornar una imagen al servidor
+		     * 
+		     * @param type
+		     * @param theuri
+		     * @param clientSocket
+		     * @param out
+		     */
 		    private void getStaticImagen(String type,URI theuri,Socket clientSocket,PrintWriter out) {
 		    	File dirImg = new File("src/main/resources/public_html"+theuri.getPath());
 		    	System.out.println("Type iMAGEN xdxxxxxxxxx: " + type);
@@ -200,6 +265,14 @@ public class HttpServer {
 					notFound(out);
 				}
 		    }
+		    
+		    /**
+		     * Se encarga de recibir el tipo del recurso ,el path del recurso y el printer para retornar el recuso solicitado
+		     * 
+		     * @param type
+		     * @param path
+		     * @param out
+		     */
 		    private void getStaticResource(String type,String path, PrintWriter out) {
 		    	System.out.println("Type RequestLine: " + type+path);
 		    	if(path.contains("/Apps")) {
@@ -222,6 +295,12 @@ public class HttpServer {
 		        	notFound(out);
 		        }
 		    }
+		    /**
+		     * Se encarga de almacenar la relacion de los endpoints a las funciones asignadas por las funciones lambda
+		     * 
+		     * @param endPoint
+		     * @param res
+		     */
 			public void get(String endPoint,Function<Request,String>  res) {
 				System.out.println("ruta "+endPoint);
 				System.out.println("val "+res);

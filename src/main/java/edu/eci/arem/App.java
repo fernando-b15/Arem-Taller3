@@ -35,11 +35,19 @@ import edu.eci.arem.server.HttpServer;
 import edu.eci.arem.server.Request;
 
 /**
- * Hello world!
+ * Esta clase es la clase principal que  ejecuta la aplicacion
  *
  */
 public class App {
 	  private static MongoConnection mongo;
+	  
+	  /**
+	   * Este Metodo es el metodo de ejecucion de la app 
+	   * que se envarga de iniciar el servidor y el servidor a su
+	   * vez inicia la conneciona a la base datos y define los endpoints de 
+	   * los recuros dinamicos por medio de fucniones Lamnda
+	   *
+	   */
 	  public static void main(String[] args) throws IOException {
 		  HttpServer server=new HttpServer();
 		  mongo=server.getMongoConnecion();
@@ -49,6 +57,12 @@ public class App {
 		  server.get("/save", (req) -> save(req));
 		  server.start();
 	  }
+	  /**
+	   * Este metodo es el encargado de realizar inserciones a la base datos con los datos recicbidos en la peticion y redirigir pasado 2 segundos a la pagina de registro
+	   * 
+	   * @param req
+	   * @return String
+	   */
 	  private static String save(Request req) {
 		  	System.out.println("post          "+req.getValFromQuery("name"));
 		  	mongo.add(req.getValFromQuery("name"),req.getValFromQuery("message"));
@@ -67,6 +81,12 @@ public class App {
              + "</html>";
  
 	  }
+	  /**
+	   * Este metodo se encarga de mostrar los menasjes de los usuario registrados en la base de datos y de mandar una peticion para almacenar nuevos mensajes
+	   * 
+	   * @param req
+	   * @return String
+	   */
 	  private static String mensajes(Request req) {
 		  String res="";
 		  ArrayList<BasicDBObject> list= mongo.consult();
@@ -105,6 +125,11 @@ public class App {
 	                 + "</html>";
 	         return header+view;
 	    }
+	  /**
+	   * Este metodo retorna auna pagina de prueba para probar el funcionamiento de los endpoints
+	   * 
+	   * @return String
+	   */
 	  private static String Hello() {
 	        return  "HTTP/1.1 200 OK\r\n"
 			        + "Content-Type: text/"+"html"+"\r\n"
@@ -116,6 +141,11 @@ public class App {
 	                + "</body>"
 	                + "</html>";
 	    }
+	  /**
+	   * Este metodo retorna el indix.html asignado al endpoint de esta funcion
+	   * 
+	   * @return String
+	   */
 	  private static String index() {
 	        File file = new File("src/main/resources/public_html/index.html");
 	        FileReader reader;
