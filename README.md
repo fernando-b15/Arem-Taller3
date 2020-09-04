@@ -94,7 +94,7 @@ El comando anterior iniciara el servidor web en puerto 36000 y realizara la cone
 
 # Informe del taller
 
-Para conocer mas a fondo el desarrollo del taller acceda al [Informe](https://github.com/fernando-b15/Arem-Taller2/blob/master/Arem_Taller2.pdf)
+Para conocer mas a fondo el desarrollo del taller acceda al [Informe](https://github.com/fernando-b15/Arem-Taller3/blob/master/Arem_Taller3.pdf)
 
 # Licencia
 
