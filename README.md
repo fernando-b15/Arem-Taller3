@@ -75,7 +75,7 @@ Para obtener la documentacion de la aplicacion , ingrese el siguinete codigo
 mvn javadoc:javadoc
 ~~~
 
-![image6](https://github.com/fernando-b15/Arem-Taller2/blob/master/img/javadoc.PNG)
+![image15](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/javadoc.PNG)
 
 para acceder a la documentacion de la apliacacion ingrese al siguiente enlace [apidocs](https://github.com/fernando-b15/Arem-Taller2/tree/master/apidocs) 
 
