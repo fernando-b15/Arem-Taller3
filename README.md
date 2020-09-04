@@ -1,5 +1,7 @@
 # Arem-Taller3
 
+Este taller fue hecho con el objetivo de comprender la arquitectura de un framework de servidor web como spark por lo cual en el laboratorio se realizo una implementacion de un servidor web usando sockets y configurandolo para que reciba peticiones y devuelva recursos estaticos como archivos html,archivos txt,archivos js e imegenes en formato PNG Y JPG ,Porl ultimo se implementaron funciones lambda para la asignacion de endpoints para los recursos dianmicos,tal como en el framework spark y se logro realizar la coneccion de un en endpoint a una base de datos Mongo DB
+
 
 # Pre-Requisitos
 
@@ -39,15 +41,31 @@ mvn package
 
 ![image1](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/package.PNG)
 
-# Pruebas
+# Pruebas de Servidor
 
-Para realizar la pruebas asociadas a la aplicacion ,ingrese el siguiente codigo
+Acontinuacion se encuentran la ruta de los recusos estaticos y dinamicos del servidor
 
-~~~
-mvn test
-~~~
+## Recursos Estaticos
 
-![image2](https://github.com/fernando-b15/Arem-Taller2/blob/master/img/test.PNG)
+  * / o /index.html
+  ![image5](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/estatico1.PNG)
+  * /bienvenida.txt
+  ![image6](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/estatico2.PNG)
+  * /perro.JPG
+   ![image7](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/estatico5.PNG)
+  * /nave.JPG
+   ![image8](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/estatico3.PNG)
+  * /eclipse.PNG
+  ![image9](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/estatico4.PNG)
+
+## Recursos Dinamicos 
+Para el Acceso  a recursos dinamicos la ruta inicia con /Apps y el el servidor se encaraga de devolver el recurso correspondiente al EndPoint
+  * /Apps/hello
+  ![image10](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/dinamico1.PNG)
+  * /Apps/home
+  ![image11](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/dinamico2.PNG)
+  * /Apps/registro
+   ![image12](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/dinamico3.PNG)
 
 # Documentacion
 
@@ -68,6 +86,8 @@ Para la ejecucion del programa desde linea de comandos windows, ingrese el sigui
 ~~~
 java -cp target/classes;target/dependency/* edu.escuelaing.arem.SparkWebApp
 ~~~
+
+El comando anterior iniciara el servidor web en puerto 36000 y realizara la coneccion a la base de datos Mongo DB
 
 ![image4](https://github.com/fernando-b15/Arem-Taller3/blob/master/img/run.PNG)
 
